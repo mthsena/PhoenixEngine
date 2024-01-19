@@ -15,7 +15,7 @@ class ByteBuffer {
     return _buffer.length;
   }
 
-  int get lenght {
+  int get length {
     return count - _readHead;
   }
 
@@ -43,47 +43,61 @@ class ByteBuffer {
     if (_readHead >= count) flush();
   }
 
-  void writeByte({required int value}) {
-    if (_writeHead >= _bufferSize) _allocate(additionalSize: 1);
-    _buffer[_writeHead] = value;
-    _writeHead++;
+  void write(dynamic value, {Encoding encoding = ascii}) {
+    if (value is int) {
+      _writeInteger(value: value);
+    } else if (value is String) {
+      _writeString(value: value, encoding: encoding);
+    } else if (value is List<int>) {
+      _writeList(values: value);
+    } else {
+      throw ArgumentError('Unsupported value type');
+    }
   }
 
-  void writeBytes({required List<int> values}) {
+  dynamic read(Type type, {Encoding encoding = ascii}) {
+    if (type == int) {
+      return _readInteger();
+    } else if (type == String) {
+      return _readString(encoding: encoding);
+    } else if (type == List<int>) {
+      return _readList(length: _readInteger());
+    } else {
+      throw ArgumentError('Unsupported type');
+    }
+  }
+
+  void _writeList({required List<int> values}) {
     if (_writeHead + values.length > _bufferSize) _allocate(additionalSize: values.length);
     _buffer.setRange(_writeHead, _writeHead + values.length, values);
     _writeHead += values.length;
   }
 
-  void writeInteger({required int value}) {
+  void _writeInteger({required int value}) {
     var byteData = ByteData(4)..setInt32(0, value, Endian.little);
-    writeBytes(values: byteData.buffer.asUint8List());
+    _writeList(values: byteData.buffer.asUint8List());
   }
 
-  void writeString({required String value, Encoding encoding = ascii}) {
+  void _writeString({required String value, Encoding encoding = ascii}) {
     List<int> encodedString = encoding.encode(value);
-    writeInteger(value: encodedString.length);
-    writeBytes(values: encodedString);
+    _writeInteger(value: encodedString.length);
+    _writeList(values: encodedString);
   }
 
-  int readByte() {
-    return _buffer[_readHead++];
-  }
-
-  List<int> readBytes({required int length}) {
+  List<int> _readList({required int length}) {
     var result = _buffer.sublist(_readHead, _readHead + length);
     _readHead += length;
     return result;
   }
 
-  int readInteger() {
-    var byteData = ByteData.view(Uint8List.fromList(readBytes(length: 4)).buffer);
+  int _readInteger() {
+    var byteData = ByteData.view(Uint8List.fromList(_readList(length: 4)).buffer);
     return byteData.getInt32(0, Endian.little);
   }
 
-  String readString({Encoding encoding = ascii}) {
-    int length = readInteger();
-    String result = encoding.decode(readBytes(length: length));
+  String _readString({Encoding encoding = ascii}) {
+    int length = _readInteger();
+    String result = encoding.decode(_readList(length: length));
     return result;
   }
 

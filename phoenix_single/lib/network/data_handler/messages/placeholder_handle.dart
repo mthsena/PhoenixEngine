@@ -1,4 +1,4 @@
-import '../../../data/models/handle/handle_message_model.dart';
+import '../../../data/models/network/handle/handle_message_model.dart';
 
 class PlaceholderHandler implements HandleMessageModel {
   @override

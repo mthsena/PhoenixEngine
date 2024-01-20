@@ -1,4 +1,4 @@
-import '../../data/models/handle/handle_message_model.dart';
+import '../../data/models/network/handle/handle_message_model.dart';
 import '../../data/packets/client_packets.dart';
 import '../byte_buffer/byte_buffer.dart';
 import 'messages/menu_messages/login_message.dart';

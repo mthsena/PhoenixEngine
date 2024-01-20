@@ -1,4 +1,4 @@
-import 'package:phoenix_single/data/models/handle/handle_message_model.dart';
+import 'package:phoenix_single/data/models/network/handle/handle_message_model.dart';
 import 'package:phoenix_single/network/byte_buffer/byte_buffer.dart';
 
 class LoginMessageHandler implements HandleMessageModel {

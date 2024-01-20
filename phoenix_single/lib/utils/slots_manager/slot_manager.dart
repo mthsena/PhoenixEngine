@@ -50,7 +50,8 @@ class SlotManager<Element> {
   }
 
   int? getFirstEmptySlot() {
-    return _slots.indexWhere((slot) => slot == null);
+    var index = _slots.indexWhere((slot) => slot == null);
+    return index != -1 ? index : null;
   }
 
   int countEmptySlots() {

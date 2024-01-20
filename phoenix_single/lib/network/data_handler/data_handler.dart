@@ -1,7 +1,8 @@
-import '../../data/model/handle/handle_message_model.dart';
-import '../../data/packet/client_packets.dart';
+import '../../data/models/handle/handle_message_model.dart';
+import '../../data/packets/client_packets.dart';
 import '../byte_buffer/byte_buffer.dart';
-import 'message/placeholder_handle.dart';
+import 'messages/menu_messages/login_message.dart';
+import 'messages/placeholder_handle.dart';
 
 class DataHandler {
   late List<HandleMessageModel> handleDataMessage;
@@ -12,8 +13,7 @@ class DataHandler {
   }
 
   void _initMessages() {
-    handleDataMessage[ClientPackets.login.index] = PlaceholderHandler();
-    // outras
+    handleDataMessage[ClientPackets.login.index] = LoginMessageHandler();
   }
 
   void handleData({required int index, required List<int> data}) {
@@ -28,6 +28,6 @@ class DataHandler {
       throw RangeError('msgType fora do intervalo válido: $msgType');
     }
 
-    handleDataMessage[msgType].handle(index, buffer.readBytes(length: buffer.length));
+    handleDataMessage[msgType].handle(index: index, data: buffer.readBytes(length: buffer.length));
   }
 }

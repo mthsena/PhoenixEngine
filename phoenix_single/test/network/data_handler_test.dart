@@ -1,6 +1,6 @@
-import 'package:phoenix_single/data/packet/client_packets.dart';
+import 'package:phoenix_single/data/packets/client_packets.dart';
 import 'package:phoenix_single/network/data_handler/data_handler.dart';
-import 'package:phoenix_single/network/data_handler/message/placeholder_handle.dart';
+import 'package:phoenix_single/network/data_handler/messages/placeholder_handle.dart';
 import 'package:test/test.dart';
 
 void main() {

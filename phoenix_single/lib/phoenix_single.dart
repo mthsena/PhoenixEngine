@@ -1,3 +1,3 @@
-int calculate() {
-  return 6 * 7;
-}
+library phoenix_server;
+
+export 'server/server.dart';

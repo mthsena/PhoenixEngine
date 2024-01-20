@@ -1,5 +1,5 @@
-import 'package:phoenix_single/phoenix_single.dart' as phoenix_single;
+import 'package:phoenix_single/phoenix_single.dart';
 
-void main(List<String> arguments) {
-  print('Hello world: ${phoenix_single.calculate()}!');
+void main() {
+  ServerSetup(address: '127.0.0.1', port: 7001).startServer();
 }

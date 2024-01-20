@@ -49,6 +49,7 @@ class ByteBuffer {
   }
 
   void writeBytes({required List<int> values}) {
+    _ensureCapacity(values.length);
     if (_writeHead + values.length > _bufferSize) _allocate(additionalSize: values.length);
     _buffer.setRange(_writeHead, _writeHead + values.length, values);
     _writeHead += values.length;
@@ -56,11 +57,13 @@ class ByteBuffer {
 
   void writeInteger({required int value}) {
     var byteData = ByteData(4)..setInt32(0, value, Endian.little);
+    _ensureCapacity(byteData.lengthInBytes);
     writeBytes(values: byteData.buffer.asUint8List());
   }
 
   void writeString({required String value, Encoding encoding = ascii}) {
     List<int> encodedString = encoding.encode(value);
+    _ensureCapacity(4 + encodedString.length);
     writeInteger(value: encodedString.length);
     writeBytes(values: encodedString);
   }
@@ -71,18 +74,21 @@ class ByteBuffer {
   }
 
   List<int> readBytes({required int length}) {
+    _checkRemaining(length);
     var result = _buffer.sublist(_readHead, _readHead + length);
     _readHead += length;
     return result;
   }
 
   int readInteger() {
+    _checkRemaining(4);
     var byteData = ByteData.view(Uint8List.fromList(readBytes(length: 4)).buffer);
     return byteData.getInt32(0, Endian.little);
   }
 
   String readString({Encoding encoding = ascii}) {
     int length = readInteger();
+    _checkRemaining(length);
     String result = encoding.decode(readBytes(length: length));
     return result;
   }

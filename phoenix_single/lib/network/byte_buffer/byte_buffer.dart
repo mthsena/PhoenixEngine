@@ -23,7 +23,7 @@ class ByteBuffer {
     _writeHead = 0;
     _readHead = 0;
     _bufferSize = initialSize;
-    _buffer = List.filled(_bufferSize, 0);
+    _buffer = List.filled(_bufferSize, 0, growable: true);
   }
 
   void _allocate({required int additionalSize}) {
@@ -43,61 +43,47 @@ class ByteBuffer {
     if (_readHead >= count) flush();
   }
 
-  void write(dynamic value, {Encoding encoding = ascii}) {
-    if (value is int) {
-      _writeInteger(value: value);
-    } else if (value is String) {
-      _writeString(value: value, encoding: encoding);
-    } else if (value is List<int>) {
-      _writeList(values: value);
-    } else {
-      throw ArgumentError('Unsupported value type');
-    }
+  void writeByte({required int value}) {
+    _ensureCapacity(1);
+    _buffer[_writeHead++] = value;
   }
 
-  dynamic read(Type type, {Encoding encoding = ascii}) {
-    if (type == int) {
-      return _readInteger();
-    } else if (type == String) {
-      return _readString(encoding: encoding);
-    } else if (type == List<int>) {
-      return _readList(length: _readInteger());
-    } else {
-      throw ArgumentError('Unsupported type');
-    }
-  }
-
-  void _writeList({required List<int> values}) {
+  void writeBytes({required List<int> values}) {
     if (_writeHead + values.length > _bufferSize) _allocate(additionalSize: values.length);
     _buffer.setRange(_writeHead, _writeHead + values.length, values);
     _writeHead += values.length;
   }
 
-  void _writeInteger({required int value}) {
+  void writeInteger({required int value}) {
     var byteData = ByteData(4)..setInt32(0, value, Endian.little);
-    _writeList(values: byteData.buffer.asUint8List());
+    writeBytes(values: byteData.buffer.asUint8List());
   }
 
-  void _writeString({required String value, Encoding encoding = ascii}) {
+  void writeString({required String value, Encoding encoding = ascii}) {
     List<int> encodedString = encoding.encode(value);
-    _writeInteger(value: encodedString.length);
-    _writeList(values: encodedString);
+    writeInteger(value: encodedString.length);
+    writeBytes(values: encodedString);
   }
 
-  List<int> _readList({required int length}) {
+  int readByte() {
+    _checkRemaining(1);
+    return _buffer[_readHead++];
+  }
+
+  List<int> readBytes({required int length}) {
     var result = _buffer.sublist(_readHead, _readHead + length);
     _readHead += length;
     return result;
   }
 
-  int _readInteger() {
-    var byteData = ByteData.view(Uint8List.fromList(_readList(length: 4)).buffer);
+  int readInteger() {
+    var byteData = ByteData.view(Uint8List.fromList(readBytes(length: 4)).buffer);
     return byteData.getInt32(0, Endian.little);
   }
 
-  String _readString({Encoding encoding = ascii}) {
-    int length = _readInteger();
-    String result = encoding.decode(_readList(length: length));
+  String readString({Encoding encoding = ascii}) {
+    int length = readInteger();
+    String result = encoding.decode(readBytes(length: length));
     return result;
   }
 
@@ -107,5 +93,13 @@ class ByteBuffer {
 
   String getString({Encoding encoding = ascii}) {
     return encoding.decode(_buffer);
+  }
+
+  void _ensureCapacity(int additionalSize) {
+    if (_writeHead + additionalSize > _bufferSize) _allocate(additionalSize: additionalSize);
+  }
+
+  void _checkRemaining(int requiredSize) {
+    if (_readHead + requiredSize > _bufferSize) throw Exception('Not enough bytes in the buffer');
   }
 }

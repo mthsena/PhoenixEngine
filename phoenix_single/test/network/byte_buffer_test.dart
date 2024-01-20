@@ -58,5 +58,34 @@ void main() {
       buffer.trim();
       expect(buffer.getArray(), []);
     });
+
+    test('write and read alert message', () {
+      int header = 0;
+      String title = 'Alerta';
+      String message = 'Algo deu errado';
+      int errorCode = 404;
+
+      // Escreve os valores no buffer
+      buffer.writeByte(value: header);
+      buffer.writeInteger(value: title.length);
+      buffer.writeString(value: title, encoding: utf8);
+      buffer.writeInteger(value: message.length);
+      buffer.writeString(value: message, encoding: utf8);
+      buffer.writeInteger(value: errorCode);
+
+      // Lê os valores do buffer
+      int readHeader = buffer.readByte();
+      buffer.readInteger();
+      String readTitle = buffer.readString(encoding: utf8);
+      buffer.readInteger();
+      String readMessage = buffer.readString(encoding: utf8);
+      int readErrorCode = buffer.readInteger();
+
+      // Verifica se os valores lidos são iguais aos valores escritos
+      expect(readHeader, header);
+      expect(readTitle, title);
+      expect(readMessage, message);
+      expect(readErrorCode, errorCode);
+    });
   });
 }

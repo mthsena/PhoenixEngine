@@ -5,7 +5,7 @@ import '../data/models/alert/alert_type.dart';
 import '../data/models/network/client_connection/client_connection.dart';
 import '../network/data_handler/data_handler.dart';
 import '../network/data_sender/data_sender.dart';
-import 'temp_memory.dart/temp_memory.dart';
+import 'temp_memory/temp_memory.dart';
 
 class ServerSetup {
   final String address;
@@ -63,7 +63,13 @@ class ClientManager {
       TempMemory().clientConnections.remove(index: client.id);
     });
 
-    // Aqui você pode adicionar a lógica para lidar com o novo cliente
+    var handler = ClientHandler(index: index, socket: socket);
+    handler.handleClient();
+
+    socket.done.then((_) {
+      print('Cliente ${client.id} se desconectou.');
+      TempMemory().clientConnections.remove(index: client.id);
+    });
   }
 }
 
@@ -79,6 +85,7 @@ class ClientHandler {
     DataHandler dataHandler = DataHandler();
 
     socket.listen((data) {
+      print('Dados recebidos do cliente ${index}: $data');
       dataHandler.handleData(index: index, data: data);
     }, onError: (error) {
       print('Ocorreu um erro: $error');

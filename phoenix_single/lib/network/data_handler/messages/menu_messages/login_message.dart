@@ -8,12 +8,17 @@ class LoginMessageHandler implements HandleMessageModel {
   void handle({required int index, required List<int> data}) {
     _buffer.writeBytes(values: data);
 
-    _buffer.readInteger();
-    String username = _buffer.readString();
-    print('Usuário: $username');
+    print(_buffer.getArray());
 
-    _buffer.readInteger();
+    // _buffer.readByte(); // Skip the first byte
+
+    // Read the username
+    String username = _buffer.readString();
+
+    // Read the password
     String password = _buffer.readString();
-    print('Senha: $password');
+
+    // Now you have the username and password, you can handle them as needed
+    print('Username: $username, Password: $password');
   }
 }

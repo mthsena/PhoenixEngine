@@ -61,9 +61,9 @@ List<int> _createLoginMessage(String username, String password) {
   buffer.writeByte(value: ClientPackets.login.index);
 
   buffer.writeInteger(value: username.length);
-  buffer.writeString(value: username, encoding: utf8);
+  buffer.writeString(value: username);
   buffer.writeInteger(value: password.length);
-  buffer.writeString(value: password, encoding: utf8);
+  buffer.writeString(value: password);
 
-  return buffer.getArray();
+  return buffer.toArray();
 }

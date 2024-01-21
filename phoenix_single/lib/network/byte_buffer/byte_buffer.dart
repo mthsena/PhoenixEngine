@@ -6,24 +6,18 @@ class ByteBuffer {
   int _bufferSize = 0;
   int _writeHead = 0;
   int _readHead = 0;
+  late bool _useUtf8;
 
-  ByteBuffer() {
-    _preAllocate(initialSize: 0);
-  }
-
-  int get count {
-    return _buffer.length;
-  }
-
-  int get length {
-    return count - _readHead;
+  ByteBuffer({bool useUtf8 = false}) {
+    _useUtf8 = useUtf8;
+    flush();
   }
 
   void _preAllocate({required int initialSize}) {
     _writeHead = 0;
     _readHead = 0;
     _bufferSize = initialSize;
-    _buffer = List.filled(_bufferSize, 0, growable: true);
+    _buffer = List.filled(_bufferSize, 0);
   }
 
   void _allocate({required int additionalSize}) {
@@ -44,12 +38,12 @@ class ByteBuffer {
   }
 
   void writeByte({required int value}) {
-    _ensureCapacity(1);
-    _buffer[_writeHead++] = value;
+    if (_writeHead >= _bufferSize) _allocate(additionalSize: 1);
+    _buffer[_writeHead] = value;
+    _writeHead++;
   }
 
   void writeBytes({required List<int> values}) {
-    _ensureCapacity(values.length);
     if (_writeHead + values.length > _bufferSize) _allocate(additionalSize: values.length);
     _buffer.setRange(_writeHead, _writeHead + values.length, values);
     _writeHead += values.length;
@@ -57,55 +51,70 @@ class ByteBuffer {
 
   void writeInteger({required int value}) {
     var byteData = ByteData(4)..setInt32(0, value, Endian.little);
-    _ensureCapacity(byteData.lengthInBytes);
     writeBytes(values: byteData.buffer.asUint8List());
   }
 
-  void writeString({required String value, Encoding encoding = ascii}) {
-    List<int> encodedString = encoding.encode(value);
-    _ensureCapacity(4 + encodedString.length);
-    writeInteger(value: encodedString.length);
-    writeBytes(values: encodedString);
+  void writeString({required String value}) {
+    List<int> stringBytes = (_useUtf8 ? utf8 : ascii).encode(value);
+    int stringLength = stringBytes.length;
+
+    writeInteger(value: stringLength);
+
+    if (stringLength <= 0) return;
+
+    if (_writeHead + stringLength - 1 > _bufferSize) _allocate(additionalSize: stringLength);
+
+    _buffer.setRange(_writeHead, _writeHead + stringLength, stringBytes);
+    _writeHead += stringLength;
   }
 
   int readByte() {
-    _checkRemaining(1);
     return _buffer[_readHead++];
   }
 
-  List<int> readBytes({required int length}) {
-    _checkRemaining(length);
-    var result = _buffer.sublist(_readHead, _readHead + length);
-    _readHead += length;
+  List<int> readBytes({required int length, bool moveReadHead = true}) {
+    List<int> result = _buffer.sublist(_readHead, _readHead + length);
+    if (moveReadHead) _readHead += length;
     return result;
   }
 
   int readInteger() {
-    _checkRemaining(4);
     var byteData = ByteData.view(Uint8List.fromList(readBytes(length: 4)).buffer);
     return byteData.getInt32(0, Endian.little);
   }
 
-  String readString({Encoding encoding = ascii}) {
-    int length = readInteger();
-    _checkRemaining(length);
-    String result = encoding.decode(readBytes(length: length));
+  String readString({bool moveReadHead = true}) {
+    int stringLength = readInteger();
+    if (stringLength <= 0) {
+      return '';
+    }
+
+    if (_buffer.length < _readHead + stringLength) {
+      throw Exception('Not enough bytes in buffer');
+    }
+
+    List<int> stringBytes = readBytes(length: stringLength, moveReadHead: false);
+
+    String result = (_useUtf8 ? utf8 : ascii).decode(stringBytes);
+    if (moveReadHead) _readHead += stringLength;
+
     return result;
   }
 
-  List<int> getArray() {
+  int get count {
+    return _buffer.length;
+  }
+
+  int get length {
+    return count - _readHead;
+  }
+
+  List<int> toArray() {
     return _buffer;
   }
 
-  String getString({Encoding encoding = ascii}) {
-    return encoding.decode(_buffer);
-  }
-
-  void _ensureCapacity(int additionalSize) {
-    if (_writeHead + additionalSize > _bufferSize) _allocate(additionalSize: additionalSize);
-  }
-
-  void _checkRemaining(int requiredSize) {
-    if (_readHead + requiredSize > _bufferSize) throw Exception('Not enough bytes in the buffer');
+  @override
+  String toString() {
+    return (_useUtf8 ? utf8 : ascii).decode(_buffer);
   }
 }

@@ -109,12 +109,11 @@ class ByteBuffer {
     return count - _readHead;
   }
 
-  List<int> toArray() {
+  List<int> getArray() {
     return _buffer;
   }
 
-  @override
-  String toString() {
+  String getString() {
     return (_useUtf8 ? utf8 : ascii).decode(_buffer);
   }
 }

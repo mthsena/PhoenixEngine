@@ -28,35 +28,33 @@ void main() {
 
     test('writeString and readString', () {
       String value = 'Hello, World!';
-      buffer.writeInteger(value: value.length);
-      buffer.writeString(value: value, encoding: utf8);
+      buffer.writeString(value: value);
 
-      buffer.readInteger();
-      expect(buffer.readString(encoding: utf8), value);
+      expect(buffer.readString(), value);
     });
 
-    test('getArray', () {
+    test('toArray', () {
       buffer.writeBytes(values: [65, 66, 67]);
-      expect(buffer.getArray(), [65, 66, 67]);
+      expect(buffer.toArray(), [65, 66, 67]);
     });
 
     test('getString', () {
       String value = 'Hello, World!';
       buffer.writeBytes(values: utf8.encode(value));
-      expect(buffer.getString(encoding: utf8), value);
+      expect(buffer.toString(), value);
     });
 
     test('flush', () {
       buffer.writeBytes(values: [65, 66, 67]);
       buffer.flush();
-      expect(buffer.getArray(), []);
+      expect(buffer.toArray(), []);
     });
 
     test('trim', () {
       buffer.writeBytes(values: [65, 66, 67]);
       buffer.readBytes(length: 3);
       buffer.trim();
-      expect(buffer.getArray(), []);
+      expect(buffer.toArray(), []);
     });
 
     test('write and read alert message', () {
@@ -67,18 +65,18 @@ void main() {
 
       // Escreve os valores no buffer
       buffer.writeByte(value: header);
-      buffer.writeInteger(value: title.length);
-      buffer.writeString(value: title, encoding: utf8);
-      buffer.writeInteger(value: message.length);
-      buffer.writeString(value: message, encoding: utf8);
+      buffer.writeString(value: title);
+      buffer.writeString(value: message);
       buffer.writeInteger(value: errorCode);
+
+      print('Buffer após a escrita: ${buffer.toArray()}');
 
       // Lê os valores do buffer
       int readHeader = buffer.readByte();
-      buffer.readInteger();
-      String readTitle = buffer.readString(encoding: utf8);
-      buffer.readInteger();
-      String readMessage = buffer.readString(encoding: utf8);
+      String readTitle = buffer.readString();
+      print('Título lido: $readTitle');
+      String readMessage = buffer.readString();
+      print('Mensagem lida: $readMessage');
       int readErrorCode = buffer.readInteger();
 
       // Verifica se os valores lidos são iguais aos valores escritos

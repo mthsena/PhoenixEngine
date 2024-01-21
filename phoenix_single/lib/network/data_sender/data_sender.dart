@@ -1,6 +1,5 @@
 import '../../data/models/alert/alert_model.dart';
 import '../../data/models/network/client_connection/client_connection.dart';
-import '../../data/packets/server_packets.dart';
 import '../byte_buffer/byte_buffer.dart';
 
 class DataSender {
@@ -22,18 +21,32 @@ class DataSender {
   void sendAlertMsg({required ClientConnectionModel client, required AlertModel alert}) {
     final ByteBuffer buffer = ByteBuffer();
 
-    buffer.writeByte(value: ServerPackets.alertMsg.index);
+    buffer.writeInteger(value: 1);
 
-    buffer.writeInteger(value: alert.title.length);
-    buffer.writeString(value: alert.title);
-
-    buffer.writeInteger(value: alert.message.length);
     buffer.writeString(value: alert.message);
-
-    buffer.writeInteger(value: alert.type.index);
 
     sendDataTo(client: client, data: buffer.getArray());
 
     buffer.flush();
   }
 }
+
+// Public Sub SendAlertMsg(ByVal index As Long, ByVal Msg As String)
+// Dim Buffer As clsBuffer
+
+//     If Not App.LogMode = 0 Then On Error GoTo errHandler
+    
+//     Set Buffer = New clsBuffer
+//     Buffer.WriteLong SAlertMsg
+//     Buffer.WriteString Msg
+//     SendDataTo index, Buffer.ToArray()
+//     DoEvents
+//     CloseSocket index
+//     Set Buffer = Nothing
+    
+//     Exit Sub
+// errHandler:
+//     HandleError "SendAlertMsg", "modTCP", Err.Number, Err.Description
+//     Err.Clear
+//     Exit Sub
+// End Sub

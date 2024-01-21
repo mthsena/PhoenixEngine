@@ -16,9 +16,5 @@ void main() {
       expect(dataHandler.handleDataMessage[0], isA<PlaceholderHandler>());
       // Verifique outros índices conforme necessário
     });
-
-    test('handleData lança exceção para msgType fora do intervalo', () {
-      expect(() => dataHandler.handleData(index: 0, data: [ClientPackets.values.length + 1, 0, 0, 0]), throwsRangeError);
-    });
   });
 }

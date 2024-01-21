@@ -1,3 +1,3 @@
 library phoenix_server;
 
-export 'server/server.dart';
+export 'server/server_setup.dart';

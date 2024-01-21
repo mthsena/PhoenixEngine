@@ -3,29 +3,9 @@ import 'dart:io';
 import '../data/models/alert/alert_model.dart';
 import '../data/models/alert/alert_type.dart';
 import '../data/models/network/client_connection/client_connection.dart';
-import '../network/data_handler/data_handler.dart';
 import '../network/data_sender/data_sender.dart';
+import 'client_handler.dart';
 import 'temp_memory/temp_memory.dart';
-
-class ServerSetup {
-  final String address;
-  final int port;
-
-  ServerSetup({required this.address, required this.port});
-
-  void startServer() async {
-    try {
-      final server = await ServerSocket.bind(address, port);
-      print('Servidor escutando em ${server.address}:${server.port}');
-
-      await for (var socket in server) {
-        ClientManager().handleNewClient(socket);
-      }
-    } catch (e) {
-      print('Ocorreu um erro ao iniciar o servidor: $e');
-    }
-  }
-}
 
 class ClientManager {
   final DataSender _dataSender = DataSender();
@@ -63,36 +43,12 @@ class ClientManager {
       TempMemory().clientConnections.remove(index: client.id);
     });
 
-    var handler = ClientHandler(index: index, socket: socket);
+    var handler = ClientHandler(client: client);
     handler.handleClient();
 
     socket.done.then((_) {
       print('Cliente ${client.id} se desconectou.');
       TempMemory().clientConnections.remove(index: client.id);
-    });
-  }
-}
-
-class ClientHandler {
-  final int index;
-  final Socket socket;
-
-  ClientHandler({required this.index, required this.socket});
-
-  void handleClient() {
-    print('Recebendo conexão do jogador $index: ${socket.remoteAddress}:${socket.remotePort}');
-
-    DataHandler dataHandler = DataHandler();
-
-    socket.listen((data) {
-      print('Dados recebidos do cliente ${index}: $data');
-      dataHandler.handleData(index: index, data: data);
-    }, onError: (error) {
-      print('Ocorreu um erro: $error');
-    }, onDone: () {
-      print('Conexão com o jogador $index fechada');
-      TempMemory().clientConnections.remove(index: index);
-      socket.close();
     });
   }
 }

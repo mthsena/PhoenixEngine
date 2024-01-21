@@ -1,3 +1,5 @@
+import '../client_connection/client_connection.dart';
+
 abstract interface class HandleMessageModel {
-  void handle({required int index, required List<int> data});
+  void handle({required ClientConnectionModel client, required List<int> data});
 }

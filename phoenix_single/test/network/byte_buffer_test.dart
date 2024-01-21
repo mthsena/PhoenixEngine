@@ -33,9 +33,9 @@ void main() {
       expect(buffer.readString(), value);
     });
 
-    test('toArray', () {
+    test('getArray', () {
       buffer.writeBytes(values: [65, 66, 67]);
-      expect(buffer.toArray(), [65, 66, 67]);
+      expect(buffer.getArray(), [65, 66, 67]);
     });
 
     test('getString', () {
@@ -47,14 +47,14 @@ void main() {
     test('flush', () {
       buffer.writeBytes(values: [65, 66, 67]);
       buffer.flush();
-      expect(buffer.toArray(), []);
+      expect(buffer.getArray(), []);
     });
 
     test('trim', () {
       buffer.writeBytes(values: [65, 66, 67]);
       buffer.readBytes(length: 3);
       buffer.trim();
-      expect(buffer.toArray(), []);
+      expect(buffer.getArray(), []);
     });
 
     test('write and read alert message', () {
@@ -69,7 +69,7 @@ void main() {
       buffer.writeString(value: message);
       buffer.writeInteger(value: errorCode);
 
-      print('Buffer após a escrita: ${buffer.toArray()}');
+      print('Buffer após a escrita: ${buffer.getArray()}');
 
       // Lê os valores do buffer
       int readHeader = buffer.readByte();

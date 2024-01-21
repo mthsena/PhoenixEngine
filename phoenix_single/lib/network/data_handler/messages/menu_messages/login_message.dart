@@ -10,15 +10,10 @@ class LoginMessageHandler implements HandleMessageModel {
 
     print(_buffer.getArray());
 
-    // _buffer.readByte(); // Skip the first byte
-
-    // Read the username
     String username = _buffer.readString();
 
-    // Read the password
     String password = _buffer.readString();
 
-    // Now you have the username and password, you can handle them as needed
     print('Username: $username, Password: $password');
   }
 }

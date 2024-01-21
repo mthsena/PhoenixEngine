@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:phoenix_single/data/models/alert/alert_type.dart';
 import 'package:phoenix_single/data/packets/client_packets.dart';
@@ -65,5 +64,5 @@ List<int> _createLoginMessage(String username, String password) {
   buffer.writeInteger(value: password.length);
   buffer.writeString(value: password);
 
-  return buffer.toArray();
+  return buffer.getArray();
 }

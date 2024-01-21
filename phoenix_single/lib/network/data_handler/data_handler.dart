@@ -22,7 +22,9 @@ class DataHandler {
     ByteBuffer buffer = ByteBuffer();
     buffer.writeBytes(values: data);
 
-    int msgType = buffer.readByte();
+    buffer.readInteger();
+
+    int msgType = buffer.readInteger();
 
     if (msgType < 0 || msgType >= ClientPackets.values.length) {
       throw RangeError('msgType fora do intervalo válido: $msgType');

@@ -13,6 +13,7 @@ class ClientHandler {
     DataHandler dataHandler = DataHandler();
 
     client.socket.listen((data) {
+      print(data);
       dataHandler.handleData(client: client, data: data);
     }, onError: (error) {
       print('Ocorreu um erro: $error');

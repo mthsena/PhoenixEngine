@@ -1,25 +1,20 @@
 import 'dart:io';
 
-import 'package:phoenix_single/data/models/alert/alert_type.dart';
-import 'package:phoenix_single/data/packets/client_packets.dart';
-import 'package:phoenix_single/data/packets/server_packets.dart';
 import 'package:phoenix_single/network/byte_buffer/byte_buffer.dart';
 
 void main() async {
   var socket = await Socket.connect('localhost', 7001);
 
-  // Crie a mensagem de login
-  var username = 'meuUsuario';
-  var password = 'minhaSenha';
+  print('Digite seu nome de usuário:');
+  String username = stdin.readLineSync()!;
+  print('Digite sua senha:');
+  String password = stdin.readLineSync()!;
 
-  // Codifique a mensagem de login em bytes
   var message = _createLoginMessage(username, password);
 
-  // Envie a mensagem de login para o servidor
   socket.add(message);
   await socket.flush();
 
-  // Adicione um ouvinte ao socket para receber a resposta do servidor
   socket.listen(
     (List<int> data) {
       var buffer = ByteBuffer();
@@ -27,22 +22,13 @@ void main() async {
 
       buffer.readInteger();
 
-      var packetType = buffer.readByte();
-      if (packetType == ServerPackets.alertMsg.index) {
-        buffer.readInteger();
-        var title = buffer.readString();
+      int packetType = buffer.readInteger();
 
-        buffer.readInteger();
-        var message = buffer.readString();
-
-        var type = AlertType.values[buffer.readInteger()];
-
-        print('Alerta recebido do servidor:');
-        print('Título: $title');
-        print('Mensagem: $message');
-        print('Tipo: $type');
+      if (packetType == 0) {
+        String message = buffer.readString();
+        print(message);
       } else {
-        print('outro tipo');
+        print('Tipo de pacote desconhecido: $packetType');
       }
     },
     onDone: () {
@@ -57,11 +43,8 @@ void main() async {
 List<int> _createLoginMessage(String username, String password) {
   var buffer = ByteBuffer();
 
-  buffer.writeByte(value: ClientPackets.login.index);
-
-  buffer.writeInteger(value: username.length);
+  buffer.writeInteger(value: 0);
   buffer.writeString(value: username);
-  buffer.writeInteger(value: password.length);
   buffer.writeString(value: password);
 
   return buffer.getArray();

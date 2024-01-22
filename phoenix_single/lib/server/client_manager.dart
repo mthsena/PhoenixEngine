@@ -45,10 +45,5 @@ class ClientManager {
 
     var handler = ClientHandler(client: client);
     handler.handleClient();
-
-    socket.done.then((_) {
-      print('Cliente ${client.id} se desconectou.');
-      TempMemory().clientConnections.remove(index: client.id);
-    });
   }
 }

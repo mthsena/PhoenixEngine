@@ -27,10 +27,15 @@ class DataHandler {
 
     int msgType = buffer.readInteger();
 
-    if (msgType < 0 || msgType >= ClientPackets.values.length) {
-      throw RangeError('msgType fora do intervalo válido: $msgType');
-    }
+    try {
+      if (msgType < 0 || msgType >= ClientPackets.values.length) {
+        throw RangeError('msgType fora do intervalo válido: $msgType');
+      }
 
-    handleDataMessage[msgType].handle(client: client, data: buffer.readBytes(length: buffer.length));
+      handleDataMessage[msgType].handle(client: client, data: buffer.readBytes(length: buffer.length));
+    } catch (e) {
+      print('Erro: $e. Fechando a conexão com o cliente.');
+      client.socket.close();
+    }
   }
 }

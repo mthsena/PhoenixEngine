@@ -3,29 +3,36 @@ import 'dart:io';
 import 'package:phoenix_single/network/byte_buffer/byte_buffer.dart';
 
 void main() async {
+  final ByteBuffer buffer = ByteBuffer();
+
   var socket = await Socket.connect('localhost', 7001);
 
-  print('Digite seu nome de usuário:');
-  String username = stdin.readLineSync()!;
-  print('Digite sua senha:');
-  String password = stdin.readLineSync()!;
+  String username = 'matheus';
+  String password = 'reis';
 
-  var message = _createLoginMessage(username, password);
+  List<int> message = _createLoginMessage(username, password);
+  int length = message.length;
 
-  socket.add(message);
+  buffer.writeInteger(value: length);
+  buffer.writeBytes(values: message);
+
+  var data = buffer.getArray();
+
+  socket.add(data);
   await socket.flush();
 
   socket.listen(
     (List<int> data) {
-      var buffer = ByteBuffer();
-      buffer.writeBytes(values: data);
+      final ByteBuffer reader = ByteBuffer();
 
-      buffer.readInteger();
+      reader.writeBytes(values: data);
 
-      int packetType = buffer.readInteger();
+      reader.readInteger();
+
+      int packetType = reader.readInteger();
 
       if (packetType == 0) {
-        String message = buffer.readString();
+        String message = reader.readString();
         print(message);
       } else {
         print('Tipo de pacote desconhecido: $packetType');

@@ -23,7 +23,7 @@ class DataHandler {
     ByteBuffer buffer = ByteBuffer();
     buffer.writeBytes(values: data);
 
-    // buffer.readInteger();
+    buffer.readInteger();
 
     int msgType = buffer.readInteger();
 

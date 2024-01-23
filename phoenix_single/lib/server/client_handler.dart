@@ -1,6 +1,6 @@
 import '../data/models/network/client_connection/client_connection.dart';
 import '../network/data_handler/data_handler.dart';
-import 'temp_memory/temp_memory.dart';
+import 'memory/memory.dart';
 
 class ClientHandler {
   final ClientConnectionModel client;
@@ -19,7 +19,7 @@ class ClientHandler {
       print('Ocorreu um erro: $error');
     }, onDone: () {
       print('Conexão com o jogador ${client.id} fechada');
-      TempMemory().clientConnections.remove(index: client.id);
+      ServerMemory().clientConnections.remove(index: client.id);
       client.socket.close();
     });
   }

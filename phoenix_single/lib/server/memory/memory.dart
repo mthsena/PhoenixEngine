@@ -1,14 +1,14 @@
 import '../../data/models/network/client_connection/client_connection.dart';
 import '../../utils/slots_manager/slot_manager.dart';
 
-class TempMemory {
-  static final TempMemory _singletonInstance = TempMemory._();
+class ServerMemory {
+  static final ServerMemory _singletonInstance = ServerMemory._();
 
-  factory TempMemory() {
+  factory ServerMemory() {
     return _singletonInstance;
   }
 
-  TempMemory._();
+  ServerMemory._();
 
   SlotManager<ClientConnectionModel> clientConnections = SlotManager(size: 2);
 

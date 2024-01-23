@@ -5,13 +5,13 @@ import '../data/models/alert/alert_type.dart';
 import '../data/models/network/client_connection/client_connection.dart';
 import '../network/data_sender/data_sender.dart';
 import 'client_handler.dart';
-import 'temp_memory/temp_memory.dart';
+import 'memory/memory.dart';
 
 class ClientManager {
   final DataSender _dataSender = DataSender();
 
   void handleNewClient(Socket socket) {
-    var index = TempMemory().clientConnections.getFirstEmptySlot();
+    var index = ServerMemory().clientConnections.getFirstEmptySlot();
 
     if (index == null) {
       _handleFullServer(socket);
@@ -35,12 +35,12 @@ class ClientManager {
 
   void _handleNewConnection(int index, Socket socket) {
     var client = ClientConnectionModel(id: index, socket: socket);
-    TempMemory().clientConnections.add(value: client);
+    ServerMemory().clientConnections.add(value: client);
     print('Cliente ${client.id} adicionado aos slots principais.');
 
     socket.done.then((_) {
       print('Cliente ${client.id} se desconectou.');
-      TempMemory().clientConnections.remove(index: client.id);
+      ServerMemory().clientConnections.remove(index: client.id);
     });
 
     var handler = ClientHandler(client: client);

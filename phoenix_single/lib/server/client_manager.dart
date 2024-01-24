@@ -36,7 +36,6 @@ class ClientManager {
   void _handleNewConnection(int index, Socket socket) {
     var client = ClientConnectionModel(id: index, socket: socket);
     ServerMemory().clientConnections.add(value: client);
-    print('Cliente ${client.id} adicionado aos slots principais.');
 
     socket.done.then((_) {
       print('Cliente ${client.id} se desconectou.');

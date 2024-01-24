@@ -8,8 +8,6 @@ class ClientHandler {
   ClientHandler({required this.client});
 
   void handleClient() {
-    print('Recebendo conexão do jogador ${client.id}: ${client.socket.remoteAddress}:${client.socket.remotePort}');
-
     DataHandler dataHandler = DataHandler();
 
     client.socket.listen((data) {

@@ -1,6 +1,6 @@
 enum ClientPackets {
   login,
-  register,
+  signUp,
 }
 
 extension ClientPacketsExtension on ClientPackets {

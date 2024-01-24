@@ -10,10 +10,17 @@ class ServerSetup {
 
   void startServer() async {
     try {
+      print('Iniciando servidor...');
+      print('Configurando o socket...');
       final server = await ServerSocket.bind(address, port);
-      print('Servidor escutando em ${server.address}:${server.port}');
+      print('Servidor iniciado com sucesso!');
+      print('Endereço: ${server.address.address}');
+      print('Porta: ${server.port}');
+
+      print('Aguardando conexões...');
 
       await for (var socket in server) {
+        print('Nova conexão recebida: ${socket.remoteAddress.address}:${socket.remotePort}');
         ClientManager().handleNewClient(socket);
       }
     } catch (e) {

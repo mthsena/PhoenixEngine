@@ -3,6 +3,7 @@ import '../../data/models/network/handle/handle_message_model.dart';
 import '../../data/packets/client_packets.dart';
 import '../byte_buffer/byte_buffer.dart';
 import 'messages/menu_messages/login_message.dart';
+import 'messages/menu_messages/sign_up_message.dart';
 import 'messages/placeholder_handle.dart';
 
 class DataHandler {
@@ -15,6 +16,7 @@ class DataHandler {
 
   void _initMessages() {
     handleDataMessage[ClientPackets.login.index] = LoginMessageHandler();
+    handleDataMessage[ClientPackets.signUp.index] = SignUpMessageHandler();
   }
 
   void handleData({required ClientConnectionModel client, required List<int> data}) {

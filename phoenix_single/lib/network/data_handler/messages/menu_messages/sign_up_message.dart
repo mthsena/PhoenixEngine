@@ -28,7 +28,7 @@ class SignUpMessageHandler implements HandleMessageModel {
     String passwordConfirm = _buffer.readString();
     print(passwordConfirm);
 
-    (ErrorResponseModel?, AuthResponseRecordModel?) signUp = await _authService.signUp(username: username, password: password, repeatPassword: passwordConfirm);
+    (ErrorResponseModel?, AuthResponseModel?) signUp = await _authService.signUp(username: username, password: password, repeatPassword: passwordConfirm);
 
     late AlertModel alert;
 

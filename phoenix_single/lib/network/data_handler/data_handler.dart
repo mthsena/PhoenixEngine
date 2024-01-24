@@ -1,8 +1,10 @@
 import '../../data/models/network/client_connection/client_connection.dart';
 import '../../data/models/network/handle/handle_message_model.dart';
 import '../../data/packets/client_packets.dart';
+import '../../server/client_handler.dart';
+import '../../utils/logger/logger.dart';
 import '../byte_buffer/byte_buffer.dart';
-import 'messages/menu_messages/login_message.dart';
+import 'messages/menu_messages/sign_in_message.dart';
 import 'messages/menu_messages/sign_up_message.dart';
 import 'messages/placeholder_handle.dart';
 
@@ -15,7 +17,7 @@ class DataHandler {
   }
 
   void _initMessages() {
-    handleDataMessage[ClientPackets.login.index] = LoginMessageHandler();
+    handleDataMessage[ClientPackets.login.index] = SignInMessageHandler();
     handleDataMessage[ClientPackets.signUp.index] = SignUpMessageHandler();
   }
 
@@ -31,13 +33,13 @@ class DataHandler {
 
     try {
       if (msgType < 0 || msgType >= ClientPackets.values.length) {
-        throw RangeError('msgType fora do intervalo válido: $msgType');
+        Logger(text: 'msgType fora do intervalo válido: $msgType', type: LoggerType.error).log();
       }
 
       handleDataMessage[msgType].handle(client: client, data: buffer.readBytes(length: buffer.length));
     } catch (e) {
-      print('Erro: $e. Fechando a conexão com o cliente.');
-      client.socket.close();
+      Logger(text: 'Erro: $e. Fechando a conexão com o cliente.', type: LoggerType.error).log();
+      ClientHandler.disconnectClient(client: client);
     }
   }
 }

@@ -40,7 +40,7 @@ class AuthRepository {
     }
   }
 
-  Future<Result<ErrorResponseModel, AuthResponseRecordModel>> signUp({
+  Future<Result<ErrorResponseModel, AuthResponseModel>> signUp({
     required String username,
     required String password,
     required String repeatPassword,
@@ -60,7 +60,7 @@ class AuthRepository {
     if (response.statusCode == 200) {
       final Map<String, dynamic> body = jsonDecode(response.body);
 
-      AuthResponseRecordModel authResponseRecordModel = AuthResponseRecordModel.fromJson(body);
+      AuthResponseModel authResponseRecordModel = AuthResponseModel.fromJson(body);
 
       return (null, authResponseRecordModel);
     } else {

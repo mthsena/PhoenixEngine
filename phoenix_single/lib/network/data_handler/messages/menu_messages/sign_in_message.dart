@@ -10,7 +10,7 @@ import '../../../../database/services/auth_service.dart';
 import '../../../byte_buffer/byte_buffer.dart';
 import '../../../data_sender/data_sender.dart';
 
-class LoginMessageHandler implements HandleMessageModel {
+class SignInMessageHandler implements HandleMessageModel {
   final ByteBuffer _buffer = ByteBuffer();
   final DataSender _dataSender = DataSender();
 

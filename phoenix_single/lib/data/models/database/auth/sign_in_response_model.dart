@@ -1,6 +1,6 @@
 class SignInResponseModel {
   String token;
-  AuthResponseRecordModel record;
+  AuthResponseModel record;
 
   SignInResponseModel({
     required this.token,
@@ -10,7 +10,7 @@ class SignInResponseModel {
   factory SignInResponseModel.fromJson(Map<String, dynamic> json) {
     return SignInResponseModel(
       token: json['token'],
-      record: AuthResponseRecordModel.fromJson(json['record']),
+      record: AuthResponseModel.fromJson(json['record']),
     );
   }
 
@@ -22,7 +22,7 @@ class SignInResponseModel {
   }
 }
 
-class AuthResponseRecordModel {
+class AuthResponseModel {
   String id;
   String collectionId;
   String collectionName;
@@ -30,7 +30,7 @@ class AuthResponseRecordModel {
   String created;
   String updated;
 
-  AuthResponseRecordModel({
+  AuthResponseModel({
     required this.id,
     required this.collectionId,
     required this.collectionName,
@@ -39,8 +39,8 @@ class AuthResponseRecordModel {
     required this.updated,
   });
 
-  factory AuthResponseRecordModel.fromJson(Map<String, dynamic> json) {
-    return AuthResponseRecordModel(
+  factory AuthResponseModel.fromJson(Map<String, dynamic> json) {
+    return AuthResponseModel(
       id: json['id'],
       collectionId: json['collectionId'],
       collectionName: json['collectionName'],

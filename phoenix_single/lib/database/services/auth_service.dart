@@ -29,7 +29,7 @@ class AuthService {
     }
   }
 
-  Future<Result<ErrorResponseModel, AuthResponseRecordModel>> signUp({
+  Future<Result<ErrorResponseModel, AuthResponseModel>> signUp({
     required String username,
     required String password,
     required String repeatPassword,

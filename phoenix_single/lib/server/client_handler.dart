@@ -1,5 +1,6 @@
 import '../data/models/network/client_connection/client_connection.dart';
 import '../network/data_handler/data_handler.dart';
+import '../utils/logger/logger.dart';
 import 'memory/memory.dart';
 
 class ClientHandler {
@@ -14,11 +15,15 @@ class ClientHandler {
       print(data);
       dataHandler.handleData(client: client, data: data);
     }, onError: (error) {
-      print('Ocorreu um erro: $error');
+      Logger(text: 'Ocorreu um erro: $error', type: LoggerType.error).log();
     }, onDone: () {
-      print('Conexão com o jogador ${client.id} fechada');
-      ServerMemory().clientConnections.remove(index: client.id);
-      client.socket.close();
+      disconnectClient(client: client);
     });
+  }
+
+  static void disconnectClient({required ClientConnectionModel client}) {
+    Logger(text: 'Conexão com o jogador ${client.id} fechada', type: LoggerType.player).log();
+    ServerMemory().clientConnections.remove(index: client.id);
+    client.socket.close();
   }
 }

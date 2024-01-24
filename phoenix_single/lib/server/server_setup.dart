@@ -1,30 +1,35 @@
 import 'dart:io';
 
+import 'package:phoenix_single/utils/logger/logger.dart';
+
 import 'client_manager.dart';
 
 class ServerSetup {
   final String address;
   final int port;
 
-  ServerSetup({required this.address, required this.port});
+  ServerSetup({
+    this.address = '127.0.0.1',
+    this.port = 7001,
+  });
 
   void startServer() async {
     try {
-      print('Iniciando servidor...');
-      print('Configurando o socket...');
+      Logger(text: 'Iniciando servidor...', type: LoggerType.info).log();
+      Logger(text: 'Configurando o socket...', type: LoggerType.info).log();
       final server = await ServerSocket.bind(address, port);
-      print('Servidor iniciado com sucesso!');
-      print('Endereço: ${server.address.address}');
-      print('Porta: ${server.port}');
+      Logger(text: 'Servidor iniciado com sucesso!', type: LoggerType.info).log();
+      Logger(text: 'Endereço: ${server.address.address}', type: LoggerType.info).log();
+      Logger(text: 'Porta: ${server.port}', type: LoggerType.info).log();
 
-      print('Aguardando conexões...');
+      Logger(text: 'Aguardando conexões...', type: LoggerType.info).log();
 
       await for (var socket in server) {
-        print('Nova conexão recebida: ${socket.remoteAddress.address}:${socket.remotePort}');
+        Logger(text: 'Nova conexão recebida: ${socket.remoteAddress.address}:${socket.remotePort}', type: LoggerType.player).log();
         ClientManager().handleNewClient(socket);
       }
     } catch (e) {
-      print('Ocorreu um erro ao iniciar o servidor: $e');
+      Logger(text: 'Ocorreu um erro ao iniciar o servidor: $e', type: LoggerType.error).log();
     }
   }
 }

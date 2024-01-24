@@ -4,6 +4,7 @@ import '../data/models/alert/alert_model.dart';
 import '../data/models/alert/alert_type.dart';
 import '../data/models/network/client_connection/client_connection.dart';
 import '../network/data_sender/data_sender.dart';
+import '../utils/logger/logger.dart';
 import 'client_handler.dart';
 import 'memory/memory.dart';
 
@@ -21,7 +22,8 @@ class ClientManager {
   }
 
   void _handleFullServer(Socket socket) async {
-    print('Número máximo de conexões alcançado');
+    Logger(text: 'Número máximo de conexões alcançado', type: LoggerType.warning).log();
+
     var message = 'Servidor cheio. Tente novamente mais tarde.';
     var alert = AlertModel(title: 'Erro', message: message, type: AlertType.error);
 
@@ -31,6 +33,7 @@ class ClientManager {
 
     await socket.flush();
     socket.close();
+    Logger(text: 'Conexão com o socket ${socket.address} fechada', type: LoggerType.warning).log();
   }
 
   void _handleNewConnection(int index, Socket socket) {
@@ -38,7 +41,7 @@ class ClientManager {
     ServerMemory().clientConnections.add(value: client);
 
     socket.done.then((_) {
-      print('Cliente ${client.id} se desconectou.');
+      Logger(text: 'Cliente ${client.id} se desconectou.', type: LoggerType.player).log();
       ServerMemory().clientConnections.remove(index: client.id);
     });
 

@@ -1,4 +1,6 @@
 import 'package:phoenix_single/data/packets/server_packets.dart';
+import 'package:phoenix_single/server/memory/memory.dart';
+import 'package:phoenix_single/utils/logger/logger.dart';
 
 import '../../data/models/alert/alert_model.dart';
 import '../../data/models/network/client_connection/client_connection.dart';
@@ -14,7 +16,35 @@ class DataSender {
 
       client.socket.add(buffer.getArray());
     } catch (e) {
-      print('Erro ao enviar dados para o cliente ${client.id}: $e');
+      Logger(text: 'Erro ao enviar dados para o cliente ${client.id}: $e', type: LoggerType.error).log();
+    }
+  }
+
+  void sendDataToAll({required List<int> data}) {
+    List<int> filledSlots = ServerMemory().clientConnections.getFilledSlots();
+
+    for (var i in filledSlots) {
+      ClientConnectionModel? slots = ServerMemory().clientConnections[i];
+
+      if (ServerMemory().isConnected(i)) {
+        if (slots != null) {
+          sendDataTo(client: slots, data: data);
+        }
+      }
+    }
+  }
+
+  void sendDataToAllBut({required ClientConnectionModel client, required List<int> data}) {
+    List<int> filledSlots = ServerMemory().clientConnections.getFilledSlots();
+
+    for (var i in filledSlots) {
+      ClientConnectionModel? slots = ServerMemory().clientConnections[i];
+
+      if (ServerMemory().isConnected(i)) {
+        if (slots != null && slots.id != client.id) {
+          sendDataTo(client: slots, data: data);
+        }
+      }
     }
   }
 

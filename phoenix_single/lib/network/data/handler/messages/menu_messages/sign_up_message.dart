@@ -1,16 +1,16 @@
-import '../../../../data/models/alert/alert_model.dart';
-import '../../../../data/models/alert/alert_type.dart';
-import '../../../../data/models/database/auth/sign_in_response_model.dart';
-import '../../../../data/models/database/error/erro_model.dart';
-import '../../../../data/models/network/client_connection/client_connection.dart';
-import '../../../../data/models/network/handle/handle_message_model.dart';
-import '../../../../database/services/auth_service.dart';
-import '../../../../utils/result/result.dart';
-import '../../../byte_buffer/byte_buffer.dart';
-import '../../../data_sender/senders/alert_sender.dart';
+import '../../../../../models/alert/alert_model.dart';
+import '../../../../../models/alert/alert_type.dart';
+import '../../../../../models/database/auth/sign_in_response_model.dart';
+import '../../../../../models/database/error/erro_model.dart';
+import '../../../../../models/network/client_connection/client_connection.dart';
+import '../../../../../models/network/handle/handle_message_model.dart';
+import '../../../../../database/services/auth_service.dart';
+import '../../../../../utils/result/result.dart';
+import '../../../../buffer.dart';
+import '../../../sender/senders/alert_sender.dart';
 
 class SignUpMessageHandler implements HandleMessageModel {
-  final ByteBuffer _buffer = ByteBuffer();
+  final PhoenixBuffer _buffer = PhoenixBuffer();
   final AuthService _authService = AuthService();
 
   @override

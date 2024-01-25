@@ -1,4 +1,4 @@
-import 'package:phoenix_single/data/models/alert/alert_type.dart';
+import 'package:phoenix_single/models/alert/alert_type.dart';
 
 interface class AlertModel {
   final String title;

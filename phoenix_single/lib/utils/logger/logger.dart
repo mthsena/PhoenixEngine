@@ -1,6 +1,6 @@
 import 'package:ansicolor/ansicolor.dart';
 
-enum LoggerType { info, warning, error, player }
+import 'logger_type.dart';
 
 class Logger {
   final String text;

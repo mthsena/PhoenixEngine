@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:phoenix_single/network/byte_buffer/byte_buffer.dart';
+import 'package:phoenix_single/network/buffer.dart';
 
 void main() async {
-  final ByteBuffer buffer = ByteBuffer();
+  final PhoenixBuffer buffer = PhoenixBuffer();
 
   var socket = await Socket.connect('localhost', 7001);
   print('Conectado ao servidor');
@@ -28,7 +28,7 @@ void main() async {
 
   socket.listen(
     (List<int> data) {
-      final ByteBuffer reader = ByteBuffer();
+      final PhoenixBuffer reader = PhoenixBuffer();
 
       reader.writeBytes(values: data);
 
@@ -53,7 +53,7 @@ void main() async {
 }
 
 List<int> _createLoginMessage(String username, String password) {
-  var buffer = ByteBuffer();
+  var buffer = PhoenixBuffer();
 
   buffer.writeInteger(value: 0);
   buffer.writeString(value: username);

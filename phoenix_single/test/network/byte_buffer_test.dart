@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:phoenix_single/network/byte_buffer/byte_buffer.dart';
+import 'package:phoenix_single/network/buffer.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('ByteBuffer', () {
-    late ByteBuffer buffer;
+  group('PhoenixBuffer', () {
+    late PhoenixBuffer buffer;
 
     setUp(() {
-      buffer = ByteBuffer();
+      buffer = PhoenixBuffer();
     });
 
     test('writeByte and readByte', () {

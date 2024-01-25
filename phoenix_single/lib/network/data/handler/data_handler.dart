@@ -1,9 +1,10 @@
-import '../../data/models/network/client_connection/client_connection.dart';
-import '../../data/models/network/handle/handle_message_model.dart';
-import '../../data/packets/client_packets.dart';
-import '../../server/client_handler.dart';
-import '../../utils/logger/logger.dart';
-import '../byte_buffer/byte_buffer.dart';
+import '../../../models/network/client_connection/client_connection.dart';
+import '../../../models/network/handle/handle_message_model.dart';
+import '../packets/client_packets.dart';
+import '../../../server/client_handler.dart';
+import '../../../utils/logger/logger.dart';
+import '../../../utils/logger/logger_type.dart';
+import '../../buffer.dart';
 import 'messages/menu_messages/sign_in_message.dart';
 import 'messages/menu_messages/sign_up_message.dart';
 import 'messages/placeholder_handle.dart';
@@ -24,7 +25,7 @@ class DataHandler {
   void handleData({required ClientConnectionModel client, required List<int> data}) {
     if (data.length < 4) return;
 
-    ByteBuffer buffer = ByteBuffer();
+    PhoenixBuffer buffer = PhoenixBuffer();
     buffer.writeBytes(values: data);
 
     buffer.readInteger();

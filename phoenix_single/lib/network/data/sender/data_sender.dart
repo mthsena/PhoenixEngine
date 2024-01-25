@@ -1,12 +1,13 @@
-import '../../data/models/network/client_connection/client_connection.dart';
-import '../../server/memory/memory.dart';
-import '../../utils/logger/logger.dart';
-import '../byte_buffer/byte_buffer.dart';
+import '../../../models/network/client_connection/client_connection.dart';
+import '../../../server/server_memory.dart';
+import '../../../utils/logger/logger.dart';
+import '../../../utils/logger/logger_type.dart';
+import '../../buffer.dart';
 
 class DataSender {
   void sendDataTo({required ClientConnectionModel client, required List<int> data}) {
     try {
-      final ByteBuffer buffer = ByteBuffer();
+      final PhoenixBuffer buffer = PhoenixBuffer();
 
       buffer.writeInteger(value: data.length);
       buffer.writeBytes(values: data);

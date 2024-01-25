@@ -1,12 +1,13 @@
 import 'dart:io';
 
-import '../data/models/alert/alert_model.dart';
-import '../data/models/alert/alert_type.dart';
-import '../data/models/network/client_connection/client_connection.dart';
-import '../network/data_sender/senders/alert_sender.dart';
+import '../models/alert/alert_model.dart';
+import '../models/alert/alert_type.dart';
+import '../models/network/client_connection/client_connection.dart';
+import '../network/data/sender/senders/alert_sender.dart';
 import '../utils/logger/logger.dart';
+import '../utils/logger/logger_type.dart';
 import 'client_handler.dart';
-import 'memory/memory.dart';
+import 'server_memory.dart';
 
 class ClientManager {
   void handleNewClient(Socket socket) {

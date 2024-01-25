@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:phoenix_single/utils/logger/logger.dart';
-
+import '../utils/logger/logger.dart';
+import '../utils/logger/logger_type.dart';
 import 'client_manager.dart';
 
 class ServerSetup {

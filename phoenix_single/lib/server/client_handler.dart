@@ -1,7 +1,8 @@
-import '../data/models/network/client_connection/client_connection.dart';
-import '../network/data_handler/data_handler.dart';
+import '../models/network/client_connection/client_connection.dart';
+import '../network/data/handler/data_handler.dart';
 import '../utils/logger/logger.dart';
-import 'memory/memory.dart';
+import '../utils/logger/logger_type.dart';
+import 'server_memory.dart';
 
 class ClientHandler {
   final ClientConnectionModel client;

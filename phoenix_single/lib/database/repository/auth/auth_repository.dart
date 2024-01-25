@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 
-import '../../../data/models/database/auth/sign_in_response_model.dart';
-import '../../../data/models/database/error/erro_model.dart';
+import '../../../models/database/auth/sign_in_response_model.dart';
+import '../../../models/database/error/erro_model.dart';
 import '../../../utils/result/result.dart';
 import '../../http_client.dart';
 

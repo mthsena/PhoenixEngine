@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-class ByteBuffer {
+class PhoenixBuffer {
   List<int> _buffer = [];
   int _bufferSize = 0;
   int _writeHead = 0;
   int _readHead = 0;
   late bool _useUtf8;
 
-  ByteBuffer({bool useUtf8 = false}) {
+  PhoenixBuffer({bool useUtf8 = false}) {
     _useUtf8 = useUtf8;
     flush();
   }

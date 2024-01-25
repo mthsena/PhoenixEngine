@@ -1,4 +1,4 @@
-import 'package:phoenix_single/utils/slots_manager/slot_manager.dart';
+import 'package:phoenix_single/server/slots_manager/slot_manager.dart';
 
 import 'package:test/test.dart';
 

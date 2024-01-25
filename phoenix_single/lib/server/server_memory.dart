@@ -1,5 +1,5 @@
-import '../../data/models/network/client_connection/client_connection.dart';
-import '../../utils/slots_manager/slot_manager.dart';
+import '../models/network/client_connection/client_connection.dart';
+import 'slots_manager/slot_manager.dart';
 
 class ServerMemory {
   static final ServerMemory _singletonInstance = ServerMemory._();

@@ -1,5 +1,7 @@
 enum ServerPackets {
   alertMsg,
+  sendId,
+  sendHighId,
 }
 
 extension ServerPacketsExtension on ServerPackets {

@@ -13,6 +13,6 @@ class ServerMemory {
   SlotManager<ClientConnectionModel> clientConnections = SlotManager(size: 2);
 
   bool isConnected(int index) {
-    return clientConnections.isSlotEmpty(index: index);
+    return !clientConnections.isSlotEmpty(index: index);
   }
 }

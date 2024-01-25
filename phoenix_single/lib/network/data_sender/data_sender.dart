@@ -1,9 +1,6 @@
-import 'package:phoenix_single/data/packets/server_packets.dart';
-import 'package:phoenix_single/server/memory/memory.dart';
-import 'package:phoenix_single/utils/logger/logger.dart';
-
-import '../../data/models/alert/alert_model.dart';
 import '../../data/models/network/client_connection/client_connection.dart';
+import '../../server/memory/memory.dart';
+import '../../utils/logger/logger.dart';
 import '../byte_buffer/byte_buffer.dart';
 
 class DataSender {
@@ -46,17 +43,5 @@ class DataSender {
         }
       }
     }
-  }
-
-  void sendAlertMsg({required ClientConnectionModel client, required AlertModel alert}) {
-    final ByteBuffer buffer = ByteBuffer();
-
-    buffer.writeInteger(value: ServerPackets.alertMsg.index);
-
-    buffer.writeString(value: alert.message);
-
-    sendDataTo(client: client, data: buffer.getArray());
-
-    buffer.flush();
   }
 }

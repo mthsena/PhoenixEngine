@@ -3,14 +3,12 @@ import 'dart:io';
 import '../data/models/alert/alert_model.dart';
 import '../data/models/alert/alert_type.dart';
 import '../data/models/network/client_connection/client_connection.dart';
-import '../network/data_sender/data_sender.dart';
+import '../network/data_sender/senders/alert_sender.dart';
 import '../utils/logger/logger.dart';
 import 'client_handler.dart';
 import 'memory/memory.dart';
 
 class ClientManager {
-  final DataSender _dataSender = DataSender();
-
   void handleNewClient(Socket socket) {
     var index = ServerMemory().clientConnections.getFirstEmptySlot();
 
@@ -29,7 +27,7 @@ class ClientManager {
 
     var tempClient = ClientConnectionModel(id: -1, socket: socket);
 
-    _dataSender.sendAlertMsg(client: tempClient, alert: alert);
+    AlertSender()(client: tempClient, alert: alert);
 
     await socket.flush();
     socket.close();

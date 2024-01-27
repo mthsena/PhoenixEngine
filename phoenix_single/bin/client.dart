@@ -8,14 +8,7 @@ void main() async {
   var socket = await Socket.connect('localhost', 7001);
   print('Conectado ao servidor');
 
-  print('Digite o usuário:');
-  late String username;
-  username = stdin.readLineSync() ?? 'matheus';
-  print('Digite a senha:');
-  late String password;
-  password = stdin.readLineSync() ?? 'matheus';
-
-  List<int> message = _createLoginMessage(username, password);
+  List<int> message = _createLoginMessage('matheus', 'matheus');
   int length = message.length;
 
   buffer.writeInteger(value: length);

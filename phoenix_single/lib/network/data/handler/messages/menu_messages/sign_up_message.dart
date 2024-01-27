@@ -1,10 +1,10 @@
+import 'package:pocketbase/pocketbase.dart';
+
+import '../../../../../database/services/auth_service.dart';
 import '../../../../../models/alert/alert_model.dart';
 import '../../../../../models/alert/alert_type.dart';
-import '../../../../../models/database/auth/sign_in_response_model.dart';
-import '../../../../../models/database/error/erro_model.dart';
 import '../../../../../models/network/client_connection/client_connection.dart';
 import '../../../../../models/network/handle/handle_message_model.dart';
-import '../../../../../database/services/auth_service.dart';
 import '../../../../../utils/result/result.dart';
 import '../../../../buffer.dart';
 import '../../../sender/senders/alert_sender.dart';
@@ -26,7 +26,7 @@ class SignUpMessageHandler implements HandleMessageModel {
     String passwordConfirm = _buffer.readString();
     print(passwordConfirm);
 
-    (ErrorResponseModel?, AuthResponseModel?) signUp = await _authService.signUp(username: username, password: password, repeatPassword: passwordConfirm);
+    (ClientException?, RecordModel?) signUp = await _authService.signUp(username: username, password: password, repeatPassword: passwordConfirm);
 
     late AlertModel alert;
 

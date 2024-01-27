@@ -7,7 +7,7 @@ environment:
   sdk: ^3.2.3
 
 dependencies:
-  http: ^1.2.0
+  pocketbase: ^0.18.0
   ansicolor: ^2.0.2
 
 dev_dependencies:

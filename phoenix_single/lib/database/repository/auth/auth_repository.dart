@@ -1,74 +1,52 @@
-import 'dart:convert';
+import 'package:pocketbase/pocketbase.dart';
 
-import 'package:http/http.dart';
-
-import '../../../models/database/auth/sign_in_response_model.dart';
-import '../../../models/database/error/erro_model.dart';
+import '../../../utils/logger/logger.dart';
+import '../../../utils/logger/logger_type.dart';
 import '../../../utils/result/result.dart';
-import '../../http_client.dart';
 
 class AuthRepository {
-  final PhoenixHTTP phoenixHTTP = PhoenixHTTP();
+  final _pb = PocketBase('http://127.0.0.1:8081');
 
-  Future<Result<ErrorResponseModel, SignInResponseModel>> signIn({
+  Future<Result<ClientException, RecordAuth>> signIn({
     required String identity,
     required String password,
   }) async {
-    const String url = 'http://127.0.0.1:8081/api/collections/users/auth-with-password';
+    try {
+      final RecordAuth recordAuth = await _pb.collection('users').authWithPassword(identity, password);
 
-    String body = jsonEncode(
-      <String, dynamic>{
-        "identity": identity,
-        "password": password,
-      },
-    );
+      return (null, recordAuth);
+    } catch (error) {
+      if (error is ClientException) {
+        return (error, null);
+      }
 
-    Response response = await phoenixHTTP.post(url: url, body: body);
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> body = jsonDecode(response.body);
-
-      SignInResponseModel signInResponseModel = SignInResponseModel.fromJson(body);
-
-      return (null, signInResponseModel);
-    } else {
-      final Map<String, dynamic> body = jsonDecode(response.body);
-
-      ErrorResponseModel errorResponseModel = ErrorResponseModel.fromJson(body);
-
-      return (errorResponseModel, null);
+      Logger(text: 'Ocorreu um erro desconhecido ao realizar o login: $error', type: LoggerType.error).log();
+      return (null, null);
     }
   }
 
-  Future<Result<ErrorResponseModel, AuthResponseModel>> signUp({
+  Future<Result<ClientException, RecordModel>> signUp({
     required String username,
     required String password,
     required String repeatPassword,
   }) async {
-    const String url = 'http://127.0.0.1:8081/api/collections/users/records';
+    Map<String, dynamic> body = {
+      "username": username,
+      "password": password,
+      "passwordConfirm": repeatPassword,
+    };
 
-    String body = jsonEncode(
-      <String, dynamic>{
-        "username": username,
-        "password": password,
-        "passwordConfirm": repeatPassword,
-      },
-    );
+    try {
+      RecordModel recordModel = await _pb.collection('users').create(body: body);
 
-    Response response = await phoenixHTTP.post(url: url, body: body);
+      return (null, recordModel);
+    } catch (error) {
+      if (error is ClientException) {
+        return (error, null);
+      }
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> body = jsonDecode(response.body);
-
-      AuthResponseModel authResponseRecordModel = AuthResponseModel.fromJson(body);
-
-      return (null, authResponseRecordModel);
-    } else {
-      final Map<String, dynamic> body = jsonDecode(response.body);
-
-      ErrorResponseModel errorResponseModel = ErrorResponseModel.fromJson(body);
-
-      return (errorResponseModel, null);
+      Logger(text: 'Ocorreu um erro desconhecido ao realizar o login: $error', type: LoggerType.error).log();
+      return (null, null);
     }
   }
 }
